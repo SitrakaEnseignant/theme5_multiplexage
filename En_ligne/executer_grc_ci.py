@@ -76,7 +76,7 @@ R, ECHECS = {}, []
 for nom, taps in CANAUX.items():
     d, info = executer(10, taps, None, 'nb_' + nom)
     es, ns, eb, nb = erreurs(d); e = evm(d)
-    hest = d['canal_rx'][0][:N]; hth = np.array([np.sum(np.asarray(taps) * np.exp(-2j * np.pi * k * np.arange(len(taps)) / N))
+    hest = d['canal_rx'][0][:N] / N; hth = np.array([np.sum(np.asarray(taps) * np.exp(-2j * np.pi * k * np.arange(len(taps)) / N))
                                                    for k in range(-N // 2, N // 2)])
     occ = np.array(OCC) + N // 2; eh = float(np.max(np.abs(hest[occ] - hth[occ])))
     R.setdefault(nom, {})['sans_bruit'] = {'erreurs_symboles': es, 'symboles': ns, 'TEB': eb / nb, 'evm': round(e, 6),
@@ -126,7 +126,7 @@ zr = d20['constellation_rx'][0][:20000]; ax[1, 1].plot(zr.real, zr.imag, '.', ms
 ax[1, 1].set_xlim(-2, 2); ax[1, 1].set_ylim(-2, 2); ax[1, 1].set_title('après égalisation (constellation_rx), écho court, 20 dB')
 kk = np.arange(-N // 2, N // 2)
 for nom, c in (('echo_court', 'C0'), ('echo_long', 'C3')):
-    he = R[nom]['donnees_sans_bruit']['canal_rx'][0][:N]; ht = np.abs([np.sum(np.asarray(CANAUX[nom]) * np.exp(-2j * np.pi * k * np.arange(len(CANAUX[nom])) / N)) for k in kk])
+    he = R[nom]['donnees_sans_bruit']['canal_rx'][0][:N] / N; ht = np.abs([np.sum(np.asarray(CANAUX[nom]) * np.exp(-2j * np.pi * k * np.arange(len(CANAUX[nom])) / N)) for k in kk])
     ax[1, 2].plot(kk[np.array(OCC) + 32], np.abs(he[np.array(OCC) + 32]), 'o', ms=3, color=c, label=f'{nom} estimé')
     ax[1, 2].plot(kk, ht, '-', lw=0.8, color=c, label=f'{nom} théorique')
 ax[1, 2].set_xlabel('indice de porteuse'); ax[1, 2].set_title('module du canal estimé (canal_rx), sans bruit'); ax[1, 2].legend(fontsize=7)

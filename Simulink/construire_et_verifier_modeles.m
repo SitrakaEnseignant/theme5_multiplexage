@@ -4,6 +4,7 @@
 % (préambule, données, pilotes), IFFT, préfixe cyclique, canal à trajets multiples, bruit gaussien complexe,
 % retrait du préfixe, FFT, estimation du canal et égalisation, décision. Le modèle fonctionne à la cadence
 % des symboles OFDM : chaque pas de calcul traite un symbole complet (vecteurs de 48, 64 ou 80 valeurs).
+% Chaque élément des vecteurs aléatoires a sa propre graine, sinon les 48 (ou 80) valeurs d'un pas seraient identiques.
 % Le script exécute le modèle sans bruit pour trois canaux, puis pour plusieurs Eb/N0, et vérifie le
 % spectre, la puissance, le canal estimé et le taux d'erreur binaire comparé à la théorie.
 % Les paramètres sont lus dans parametres_ofdm.json, écrit par outils/generer_grc.py.
@@ -28,7 +29,7 @@ R = struct(); echecs = {}; D = struct();
 for i = 1:numel(canaux)
     c = canaux{i}; h = P.canaux.(c)(:).';
     so = simuler(mdl, P, 10, h, 0); [es, ns, eb, nb, e, z, ref] = mesurer(so, P);
-    he = lirev(so, 'hest', P.N); he = he(end, :); ht = reponse(h, P);
+    he = lirev(so, 'hest', P.N); he = he(end, :) / P.N; ht = reponse(h, P);
     eh = max(abs(he(P.OCC + 33) - ht(P.OCC + 33)));
     R.(c).sans_bruit = struct('erreurs_symboles', es, 'symboles', ns, 'TEB', eb / nb, 'evm', e, 'ecart_max_canal_estime', eh);
     fprintf('%s sans bruit : %d erreurs sur %d symboles, EVM %.2e, ecart canal %.2e\n', c, es, ns, e, eh);
@@ -103,7 +104,7 @@ hws = get_param(mdl, 'ModelWorkspace');
 v = {'Tsym', P.Tsym; 'sigma2', 0; 'taps', 1; 'graine', 7; 'ptsI', real(P.pts); 'ptsQ', imag(P.pts); 'ND', P.ND; 'NS', P.NS};
 for k = 1:size(v, 1), hws.assignin(v{k, 1}, v{k, 2}); end
 % émetteur
-ajouter(mdl, [B 'Sources/Uniform Random Number'], 'src', 0, 1, 'Minimum', 'zeros(1, ND)', 'Maximum', '4 * ones(1, ND)', 'Seed', 'graine', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Uniform Random Number'], 'src', 0, 1, 'Minimum', 'zeros(1, ND)', 'Maximum', '4 * ones(1, ND)', 'Seed', 'graine + (1:ND)', 'SampleTime', 'Tsym');
 ajouter(mdl, [B 'Math Operations/Rounding Function'], 'indice', 1, 1, 'Operator', 'floor');
 ajouter(mdl, [B 'Lookup Tables/Direct Lookup Table (n-D)'], 'table_I', 2, 0.5, 'NumberOfTableDimensions', '1', 'Table', 'ptsI');
 ajouter(mdl, [B 'Lookup Tables/Direct Lookup Table (n-D)'], 'table_Q', 2, 1.5, 'NumberOfTableDimensions', '1', 'Table', 'ptsQ');
@@ -112,25 +113,25 @@ ajouter(mdl, [B 'Sinks/To Workspace'], 'sym', 2, 2.6, 'VariableName', 'sym', 'Sa
 relier(mdl, 'src/1', 'indice/1'); relier(mdl, 'indice/1', 'table_I/1'); relier(mdl, 'indice/1', 'table_Q/1'); relier(mdl, 'indice/1', 'sym/1');
 relier(mdl, 'table_I/1', 'symboles_tx/1'); relier(mdl, 'table_Q/1', 'symboles_tx/2');
 fonction(mdl, 'allocateur', 4, 1, code_allocateur(P));
-fonction(mdl, 'ifft', 5, 1, sprintf(['function x = ifft_ofdm(X)\n%% IFFT non normalisee, porteuse 0 au centre en entree (comme le bloc FFT inverse de GNU Radio)\n' ...
+fonction(mdl, 'ifft_tx', 5, 1, sprintf(['function x = ifft_ofdm(X)\n%% IFFT non normalisee, porteuse 0 au centre en entree (comme le bloc FFT inverse de GNU Radio)\n' ...
     'x = %d * ifft(ifftshift(X(:).''));\nend\n'], P.N));
 fonction(mdl, 'prefixe', 6, 1, sprintf(['function y = prefixe(x)\n%% prefixe cyclique : copie des %d derniers echantillons en tete du symbole\n' ...
     'x = x(:).''; y = [x(%d:%d), x];\nend\n'], P.CP, P.N - P.CP + 1, P.N));
 ajouter(mdl, [B 'Sinks/To Workspace'], 's', 7, 0, 'VariableName', 's', 'SaveFormat', 'Array');
 ajouter(mdl, [B 'Sinks/To Workspace'], 'donnees', 5, 2.4, 'VariableName', 'donnees', 'SaveFormat', 'Array');
-relier(mdl, 'symboles_tx/1', 'allocateur/1'); relier(mdl, 'allocateur/1', 'ifft/1'); relier(mdl, 'allocateur/2', 'donnees/1');
-relier(mdl, 'ifft/1', 'prefixe/1'); relier(mdl, 'prefixe/1', 's/1');
+relier(mdl, 'symboles_tx/1', 'allocateur/1'); relier(mdl, 'allocateur/1', 'ifft_tx/1'); relier(mdl, 'allocateur/2', 'donnees/1');
+relier(mdl, 'ifft_tx/1', 'prefixe/1'); relier(mdl, 'prefixe/1', 's/1');
 % canal
 ajouter(mdl, [B 'Sources/Constant'], 'taps', 6, 2.2, 'Value', 'taps');
 fonction(mdl, 'canal_trajets', 7, 1, code_canal_trajets());
-ajouter(mdl, [B 'Sources/Random Number'], 'bruit_I', 7, 2.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '1', 'SampleTime', 'Tsym');
-ajouter(mdl, [B 'Sources/Random Number'], 'bruit_Q', 7, 3.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '2', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Random Number'], 'bruit_I', 7, 2.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '1000 + (1:NS)', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Random Number'], 'bruit_Q', 7, 3.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '2000 + (1:NS)', 'SampleTime', 'Tsym');
 fonction(mdl, 'canal', 8, 1.6, sprintf('function r = canal(x, nI, nQ)\n%% addition du bruit gaussien complexe\nr = x(:).'' + complex(nI(:).'', nQ(:).'');\nend\n'));
 relier(mdl, 'prefixe/1', 'canal_trajets/1'); relier(mdl, 'taps/1', 'canal_trajets/2'); relier(mdl, 'canal_trajets/1', 'canal/1');
 relier(mdl, 'bruit_I/1', 'canal/2'); relier(mdl, 'bruit_Q/1', 'canal/3');
 % récepteur
 fonction(mdl, 'retrait_prefixe', 9, 1.6, sprintf('function y = retrait_prefixe(r)\n%% retrait du prefixe cyclique (equivalent du bloc Keep M in N)\nr = r(:).''; y = r(%d:%d);\nend\n', P.CP + 1, P.NS));
-fonction(mdl, 'fft', 10, 1.6, sprintf('function Y = fft_ofdm(y)\n%% FFT non normalisee, porteuse 0 au centre en sortie\nY = fftshift(fft(y(:).''));\nend\n'));
+fonction(mdl, 'fft_rx', 10, 1.6, sprintf('function Y = fft_ofdm(y)\n%% FFT non normalisee, porteuse 0 au centre en sortie\nY = fftshift(fft(y(:).''));\nend\n'));
 fonction(mdl, 'egaliseur', 11, 1.6, code_egaliseur(P));
 fonction(mdl, 'decision', 12, 1.6, code_decision(P));
 ajouter(mdl, [B 'Sinks/To Workspace'], 'Ybrut', 11, 3.2, 'VariableName', 'Ybrut', 'SaveFormat', 'Array');
@@ -138,8 +139,8 @@ ajouter(mdl, [B 'Sinks/To Workspace'], 'z', 13, 0.6, 'VariableName', 'z', 'SaveF
 ajouter(mdl, [B 'Sinks/To Workspace'], 'hest', 13, 1.6, 'VariableName', 'hest', 'SaveFormat', 'Array');
 ajouter(mdl, [B 'Sinks/To Workspace'], 'valide', 13, 2.6, 'VariableName', 'valide', 'SaveFormat', 'Array');
 ajouter(mdl, [B 'Sinks/To Workspace'], 'dec', 13, 3.6, 'VariableName', 'dec', 'SaveFormat', 'Array');
-relier(mdl, 'canal/1', 'retrait_prefixe/1'); relier(mdl, 'retrait_prefixe/1', 'fft/1'); relier(mdl, 'fft/1', 'egaliseur/1');
-relier(mdl, 'fft/1', 'Ybrut/1'); relier(mdl, 'egaliseur/1', 'decision/1'); relier(mdl, 'egaliseur/1', 'z/1');
+relier(mdl, 'canal/1', 'retrait_prefixe/1'); relier(mdl, 'retrait_prefixe/1', 'fft_rx/1'); relier(mdl, 'fft_rx/1', 'egaliseur/1');
+relier(mdl, 'fft_rx/1', 'Ybrut/1'); relier(mdl, 'egaliseur/1', 'decision/1'); relier(mdl, 'egaliseur/1', 'z/1');
 relier(mdl, 'egaliseur/2', 'hest/1'); relier(mdl, 'egaliseur/3', 'valide/1'); relier(mdl, 'decision/1', 'dec/1');
 end
 
@@ -261,7 +262,7 @@ z = lirev(so, 'z', P.ND); z = z(val == 1, :);
 subplot(2, 3, 5); plot(real(z(:)), imag(z(:)), '.', 'MarkerSize', 3); axis equal; xlim([-2 2]); ylim([-2 2]); grid on; title('apres egalisation, echo court, 20 dB');
 subplot(2, 3, 6); hold on; k = -P.N / 2:P.N / 2 - 1; co = {[0 0.45 0.74], [0.85 0.33 0.1]}; nm = {'echo_court', 'echo_long'};
 for i = 1:2
-    he = lirev(D.(nm{i}), 'hest', P.N); he = he(end, :); ht = reponse(P.canaux.(nm{i})(:).', P);
+    he = lirev(D.(nm{i}), 'hest', P.N); he = he(end, :) / P.N; ht = reponse(P.canaux.(nm{i})(:).', P);
     plot(k(P.OCC + 33), abs(he(P.OCC + 33)), 'o', 'Color', co{i}, 'MarkerSize', 4); plot(k, abs(ht), '-', 'Color', co{i});
 end
 grid on; xlabel('indice de porteuse'); title('module du canal estime, sans bruit');

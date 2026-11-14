@@ -355,7 +355,7 @@ blocks:
     - 300
     rotation: 0
     state: enabled
-- name: ifft
+- name: ifft_tx
   id: fft_vxx
   parameters:
     alias: ''
@@ -651,7 +651,7 @@ blocks:
     - 620
     rotation: 0
     state: enabled
-- name: fft
+- name: fft_rx
   id: fft_vxx
   parameters:
     alias: ''
@@ -1104,9 +1104,9 @@ connections:
   - '0'
 - - allocateur
   - '0'
-  - ifft
+  - ifft_tx
   - '0'
-- - ifft
+- - ifft_tx
   - '0'
   - prefixe
   - '0'
@@ -1152,9 +1152,9 @@ connections:
   - '0'
 - - serie_parallele
   - '0'
-  - fft
+  - fft_rx
   - '0'
-- - fft
+- - fft_rx
   - '0'
   - egaliseur
   - '0'
@@ -1166,7 +1166,7 @@ connections:
   - '1'
   - canal_estime
   - '0'
-- - fft
+- - fft_rx
   - '0'
   - porteuses_brutes
   - '0'

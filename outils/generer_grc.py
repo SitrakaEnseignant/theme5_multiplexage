@@ -97,13 +97,13 @@ def construire():
     g.blk('allocateur', 'digital_ofdm_carrier_allocator_cvc', 560, y1, fft_len='fft_len', occupied_carriers='occupied_carriers',
           pilot_carriers='pilot_carriers', pilot_symbols='pilot_symbols', sync_words='(preambule, preambule)',
           len_tag_key='"packet_len"', output_is_shifted='True')
-    g.blk('ifft', 'fft_vxx', 800, y1, type='complex', fft_size='fft_len', forward='False', window='[1.0] * fft_len',
+    g.blk('ifft_tx', 'fft_vxx', 800, y1, type='complex', fft_size='fft_len', forward='False', window='[1.0] * fft_len',
           shift='True', nthreads='1')
     g.blk('prefixe', 'digital_ofdm_cyclic_prefixer', 1000, y1, input_size='fft_len', cp_len='cp_len', rolloff='0',
           tagname='"packet_len"')
     g.blk('throttle', 'blocks_throttle', 1200, y1, type='complex', samples_per_second='samp_rate', ignoretag='True', vlen='1')
-    g.c('src', 'symboles_tx'); g.c('symboles_tx', 'trame'); g.c('trame', 'allocateur'); g.c('allocateur', 'ifft')
-    g.c('ifft', 'prefixe'); g.c('prefixe', 'throttle')
+    g.c('src', 'symboles_tx'); g.c('symboles_tx', 'trame'); g.c('trame', 'allocateur'); g.c('allocateur', 'ifft_tx')
+    g.c('ifft_tx', 'prefixe'); g.c('prefixe', 'throttle')
     # canal : trajets multiples puis bruit gaussien complexe
     g.blk('canal_trajets', 'filter_fir_filter_xxx', 1400, y1, type='ccc', decim='1', taps='taps', samp_delay='0')
     g.blk('bruit_I', 'analog_noise_source_x', 1400, y1 + 110, type='float', noise_type='analog.GR_GAUSSIAN', amp='noise_amp', seed='1')
@@ -120,7 +120,7 @@ def construire():
     # récepteur
     g.blk('retrait_prefixe', 'blocks_keep_m_in_n', 16, y2, type='complex', m='fft_len', n='fft_len + cp_len', offset='cp_len')
     g.blk('serie_parallele', 'blocks_stream_to_vector', 220, y2, type='complex', num_items='fft_len', vlen='1')
-    g.blk('fft', 'fft_vxx', 420, y2, type='complex', fft_size='fft_len', forward='True', window='[1.0] * fft_len',
+    g.blk('fft_rx', 'fft_vxx', 420, y2, type='complex', fft_size='fft_len', forward='True', window='[1.0] * fft_len',
           shift='True', nthreads='1')
     src = open(os.path.join(ICI, 'egaliseur_epy.py'), encoding='utf8').read()
     g.blk('egaliseur', 'epy_block', 640, y2, _source_code=src, fft_len='fft_len', npre='npre', nsym='nsym_trame',
@@ -131,9 +131,9 @@ def construire():
     g.blk('decision', 'digital_constellation_decoder_cb', 1080, y2, constellation='constellation')
     g.blk('dec_float', 'blocks_char_to_float', 1260, y2, scale='1', vlen='1')
     g.blk('tx_float', 'blocks_char_to_float', 200, y1 - 110, scale='1', vlen='1')
-    g.c('canal', 'retrait_prefixe'); g.c('retrait_prefixe', 'serie_parallele'); g.c('serie_parallele', 'fft')
-    g.c('fft', 'egaliseur'); g.c('egaliseur', 'donnees', 0, 0); g.c('egaliseur', 'canal_estime', 1, 0)
-    g.c('fft', 'porteuses_brutes'); g.c('donnees', 'decision'); g.c('decision', 'dec_float'); g.c('src', 'tx_float')
+    g.c('canal', 'retrait_prefixe'); g.c('retrait_prefixe', 'serie_parallele'); g.c('serie_parallele', 'fft_rx')
+    g.c('fft_rx', 'egaliseur'); g.c('egaliseur', 'donnees', 0, 0); g.c('egaliseur', 'canal_estime', 1, 0)
+    g.c('fft_rx', 'porteuses_brutes'); g.c('donnees', 'decision'); g.c('decision', 'dec_float'); g.c('src', 'tx_float')
     const_sink(g, 'constellation_rx', '2,1,1,1', 1080, y2 + 120)
     const_sink(g, 'constellation_brute', '2,0,1,1', 880, y2 + 220, lim='30')
     time_sink(g, 'canal_rx', 'complex', '1', ['canal estimé'], '3,0,1,1', 1080, y2 + 220, size='64', ymin='-3', ymax='3')
