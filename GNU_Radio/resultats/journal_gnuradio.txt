@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "/home/runner/work/theme5_multiplexage/theme5_multiplexage/En_ligne/executer_grc_ci.py", line 77, in <module>
+  File "/home/runner/work/theme5_multiplexage/theme5_multiplexage/En_ligne/executer_grc_ci.py", line 97, in <module>
     d, info = executer(10, taps, None, 'nb_' + nom)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/home/runner/work/theme5_multiplexage/theme5_multiplexage/En_ligne/executer_grc_ci.py", line 48, in executer
-    if r.returncode: raise RuntimeError(r.stdout + r.stderr)
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    if r.returncode: raise RuntimeError(r.stdout + r.stderr + '\n' + diagnostic(path))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 RuntimeError: <<< Welcome to GNU Radio Companion Compiler 3.10.9.2 >>>
 
 Block paths:
@@ -19,3 +19,5 @@ Sink - in0(0):
 **************************************************
 Compilation error
 
+BLOC canal / Sink - in0(0) : Port is not connected.
+ports du bloc Python : [('in', 'complex', 64), ('out', 'complex', 48), ('out', 'complex', 64)]

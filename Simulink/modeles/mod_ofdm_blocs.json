@@ -8,7 +8,7 @@
       "Maximum",
       "4 * ones(1, ND)",
       "Seed",
-      "graine + (1:ND)",
+      "graines_src",
       "SampleTime",
       "Tsym"
     ]
@@ -116,7 +116,7 @@
       "Variance",
       "sigma2 / 2",
       "Seed",
-      "1000 + (1:NS)",
+      "graines_I",
       "SampleTime",
       "Tsym"
     ]
@@ -130,7 +130,7 @@
       "Variance",
       "sigma2 / 2",
       "Seed",
-      "2000 + (1:NS)",
+      "graines_Q",
       "SampleTime",
       "Tsym"
     ]
