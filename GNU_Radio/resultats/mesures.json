@@ -1,0 +1,195 @@
+{
+ "bbag": {
+  "sans_bruit": {
+   "erreurs_symboles": 0,
+   "symboles": 9600,
+   "TEB": 0.0,
+   "evm": 0.0,
+   "ecart_max_canal_estime": 0.0,
+   "duree_s": 0.04,
+   "fin_naturelle": true,
+   "ecart_type_bruit": 0.0
+  },
+  "taux": [
+   {
+    "EbN0_dB": 0,
+    "TEB": 0.12166666666666667,
+    "erreurs": 23360,
+    "bits": 192000,
+    "theorie": 0.12212147786418555,
+    "canal_connu": 0.0786496035251426,
+    "conforme": true,
+    "duree_s": 0.08,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 4.0
+   },
+   {
+    "EbN0_dB": 2,
+    "TEB": 0.06565104166666667,
+    "erreurs": 12605,
+    "bits": 192000,
+    "theorie": 0.06652791252690489,
+    "canal_connu": 0.03750612835892598,
+    "conforme": true,
+    "duree_s": 0.08,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 3.177312938897126
+   },
+   {
+    "EbN0_dB": 4,
+    "TEB": 0.026848958333333332,
+    "erreurs": 5155,
+    "bits": 192000,
+    "theorie": 0.02759947821815831,
+    "canal_connu": 0.012500818040737565,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 2.523829377920773
+   },
+   {
+    "EbN0_dB": 6,
+    "TEB": 0.007520833333333333,
+    "erreurs": 1444,
+    "bits": 192000,
+    "theorie": 0.0074744962997974574,
+    "canal_connu": 0.002388290780932807,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 2.004748934509089
+   },
+   {
+    "EbN0_dB": 8,
+    "TEB": 0.00103125,
+    "erreurs": 198,
+    "bits": 192000,
+    "theorie": 0.0010380381755216294,
+    "canal_connu": 0.00019090777407599314,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 1.5924286822139888
+   },
+   {
+    "EbN0_dB": 10,
+    "TEB": 6.25e-05,
+    "erreurs": 12,
+    "bits": 192000,
+    "theorie": 5.044311311004751e-05,
+    "canal_connu": 3.87210821552205e-06,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 1.2649110640673518
+   }
+  ]
+ },
+ "echo_court": {
+  "sans_bruit": {
+   "erreurs_symboles": 0,
+   "symboles": 9600,
+   "TEB": 0.0,
+   "evm": 0.0,
+   "ecart_max_canal_estime": 0.0,
+   "duree_s": 0.01,
+   "fin_naturelle": true,
+   "ecart_type_bruit": 0.0
+  },
+  "taux": [
+   {
+    "EbN0_dB": 0,
+    "TEB": 0.11555208333333333,
+    "erreurs": 22186,
+    "bits": 192000,
+    "theorie": 0.11591810533955647,
+    "canal_connu": 0.08504810295383915,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 4.0
+   },
+   {
+    "EbN0_dB": 4,
+    "TEB": 0.06716666666666667,
+    "erreurs": 12896,
+    "bits": 192000,
+    "theorie": 0.06727536753250753,
+    "canal_connu": 0.049829004306011414,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 2.523829377920773
+   },
+   {
+    "EbN0_dB": 8,
+    "TEB": 0.04025,
+    "erreurs": 7728,
+    "bits": 192000,
+    "theorie": 0.039921901276355254,
+    "canal_connu": 0.028746057419698712,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 1.5924286822139888
+   },
+   {
+    "EbN0_dB": 12,
+    "TEB": 0.020963541666666665,
+    "erreurs": 4025,
+    "bits": 192000,
+    "theorie": 0.021345147143792268,
+    "canal_connu": 0.014903155427610296,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 1.004754572603832
+   },
+   {
+    "EbN0_dB": 16,
+    "TEB": 0.008848958333333334,
+    "erreurs": 1699,
+    "bits": 192000,
+    "theorie": 0.009190932203659968,
+    "canal_connu": 0.0058953971442178175,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 0.6339572769844453
+   },
+   {
+    "EbN0_dB": 20,
+    "TEB": 0.0020625,
+    "erreurs": 396,
+    "bits": 192000,
+    "theorie": 0.0023117585384270466,
+    "canal_connu": 0.0011699262785309142,
+    "conforme": true,
+    "duree_s": 0.07,
+    "fin_naturelle": true,
+    "ecart_type_bruit": 0.4
+   }
+  ]
+ },
+ "echo_long": {
+  "sans_bruit": {
+   "erreurs_symboles": 784,
+   "symboles": 9600,
+   "TEB": 0.04536458333333333,
+   "evm": 0.57219,
+   "ecart_max_canal_estime": 0.292365,
+   "duree_s": 0.01,
+   "fin_naturelle": true,
+   "ecart_type_bruit": 0.0
+  }
+ },
+ "signal": {
+  "part_puissance_bande": 0.99403,
+  "puissance_moyenne": 52.326,
+  "puissance_attendue": 52.0,
+  "papr_moyen_dB": 6.47,
+  "P_papr_sup_8dB": 0.0955,
+  "P_papr_sup_8dB_approx": 0.0903
+ },
+ "echecs": []
+}

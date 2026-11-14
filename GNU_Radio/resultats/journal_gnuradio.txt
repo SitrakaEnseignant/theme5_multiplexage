@@ -1,23 +1,18 @@
-Traceback (most recent call last):
-  File "/home/runner/work/theme5_multiplexage/theme5_multiplexage/En_ligne/executer_grc_ci.py", line 97, in <module>
-    d, info = executer(10, taps, None, 'nb_' + nom)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/theme5_multiplexage/theme5_multiplexage/En_ligne/executer_grc_ci.py", line 48, in executer
-    if r.returncode: raise RuntimeError(r.stdout + r.stderr + '\n' + diagnostic(path))
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: <<< Welcome to GNU Radio Companion Compiler 3.10.9.2 >>>
-
-Block paths:
-	/usr/share/gnuradio/grc/blocks
-
->>> Loading: /home/runner/work/theme5_multiplexage/theme5_multiplexage/resultats_gnuradio/hl/ofdm_tx_rx_sim_hl_nb_bbag.grc
->>> Load Error: /home/runner/work/theme5_multiplexage/theme5_multiplexage/resultats_gnuradio/hl/ofdm_tx_rx_sim_hl_nb_bbag.grc: Flowgraph invalid
-**************************************************
-1 errors from flowgraph:
-Sink - in0(0):
-	Port is not connected.
-**************************************************
-Compilation error
-
-BLOC canal / Sink - in0(0) : Port is not connected.
-ports du bloc Python : [('in', 'complex', 64), ('out', 'complex', 48), ('out', 'complex', 64)]
+vmcircbuf_prefs::get :info: /home/runner/.gnuradio/prefs/vmcircbuf_default_factory failed to open: bad true, fail true, eof true
+bbag {'erreurs_symboles': 0, 'symboles': 9600, 'TEB': 0.0, 'evm': 0.0, 'ecart_max_canal_estime': 0.0, 'duree_s': 0.04, 'fin_naturelle': True, 'ecart_type_bruit': 0.0}
+echo_court {'erreurs_symboles': 0, 'symboles': 9600, 'TEB': 0.0, 'evm': 0.0, 'ecart_max_canal_estime': 0.0, 'duree_s': 0.01, 'fin_naturelle': True, 'ecart_type_bruit': 0.0}
+echo_long {'erreurs_symboles': 784, 'symboles': 9600, 'TEB': 0.04536458333333333, 'evm': 0.57219, 'ecart_max_canal_estime': 0.292365, 'duree_s': 0.01, 'fin_naturelle': True, 'ecart_type_bruit': 0.0}
+{'part_puissance_bande': 0.99403, 'puissance_moyenne': 52.326, 'puissance_attendue': 52.0, 'papr_moyen_dB': 6.47, 'P_papr_sup_8dB': 0.0955, 'P_papr_sup_8dB_approx': 0.0903}
+bbag 0 1.217e-01 23360 1.221e-01 True
+bbag 2 6.565e-02 12605 6.653e-02 True
+bbag 4 2.685e-02 5155 2.760e-02 True
+bbag 6 7.521e-03 1444 7.474e-03 True
+bbag 8 1.031e-03 198 1.038e-03 True
+bbag 10 6.250e-05 12 5.044e-05 True
+echo_court 0 1.156e-01 22186 1.159e-01 True
+echo_court 4 6.717e-02 12896 6.728e-02 True
+echo_court 8 4.025e-02 7728 3.992e-02 True
+echo_court 12 2.096e-02 4025 2.135e-02 True
+echo_court 16 8.849e-03 1699 9.191e-03 True
+echo_court 20 2.063e-03 396 2.312e-03 True
+ECHECS : []
