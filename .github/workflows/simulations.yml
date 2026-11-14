@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: simulations
+  cancel-in-progress: false
 jobs:
   simulink:
     runs-on: ubuntu-latest
@@ -88,4 +91,4 @@ jobs:
           git add -A Simulink GNU_Radio ETAT.txt
           git diff --cached --quiet && exit 0
           git commit -qm "Resultats de l'execution ${GITHUB_RUN_ID} (modeles Simulink, schemas, figures) [skip ci]"
-          for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
+          for i in 1 2 3; do git pull -q --rebase -X theirs origin main && git push -q origin HEAD:main && break; sleep 5; done
