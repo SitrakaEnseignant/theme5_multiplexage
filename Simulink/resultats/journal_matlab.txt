@@ -1,0 +1,23 @@
+MATLAB 24.2.0.3361896 (R2024b) Update 10
+bbag sans bruit : 0 erreurs sur 9600 symboles, EVM 2.50e-16, ecart canal 6.30e+01
+echo_court sans bruit : 0 erreurs sur 9600 symboles, EVM 5.59e-16, ecart canal 1.19e+02
+echo_long sans bruit : 646 erreurs sur 9600 symboles, EVM 5.51e-01, ecart canal 1.38e+02
+Spectre : 0.9650 de la puissance dans la bande ; puissance moyenne 46.62 (attendue 52) ; P(PAPR > 8 dB) = 0.909 (approx. 0.090)
+bbag Eb/N0 =  0 dB : TEB 0.000e+00 (0 erreurs), theorie 1.221e-01  true
+bbag Eb/N0 =  2 dB : TEB 0.000e+00 (0 erreurs), theorie 6.653e-02  true
+bbag Eb/N0 =  4 dB : TEB 0.000e+00 (0 erreurs), theorie 2.760e-02  true
+bbag Eb/N0 =  6 dB : TEB 0.000e+00 (0 erreurs), theorie 7.474e-03  true
+bbag Eb/N0 =  8 dB : TEB 0.000e+00 (0 erreurs), theorie 1.038e-03  true
+bbag Eb/N0 = 10 dB : TEB 0.000e+00 (0 erreurs), theorie 5.044e-05  true
+echo_court Eb/N0 =  0 dB : TEB 0.000e+00 (0 erreurs), theorie 1.159e-01  true
+echo_court Eb/N0 =  4 dB : TEB 0.000e+00 (0 erreurs), theorie 6.728e-02  true
+echo_court Eb/N0 =  8 dB : TEB 0.000e+00 (0 erreurs), theorie 3.992e-02  true
+echo_court Eb/N0 = 12 dB : TEB 0.000e+00 (0 erreurs), theorie 2.135e-02  true
+echo_court Eb/N0 = 16 dB : TEB 0.000e+00 (0 erreurs), theorie 9.191e-03  true
+echo_court Eb/N0 = 20 dB : TEB 0.000e+00 (0 erreurs), theorie 2.312e-03  true
+
+Controles en echec : 4
+  ECHEC bbag : 0 erreurs, EVM 2.50e-16, ecart canal 6.30e+01 sans bruit
+  ECHEC echo_court : 0 erreurs, EVM 5.59e-16, ecart canal 1.19e+02 sans bruit
+  ECHEC spectre : 0.965 de la puissance dans la bande
+  ECHEC puissance moyenne 46.62 au lieu de 52
