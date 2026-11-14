@@ -269,7 +269,7 @@ for i = 1:2
 end
 grid on; xlabel('indice de porteuse'); title('module du canal estime, sans bruit');
 legend('echo court estime', 'echo court theorique', 'echo long estime', 'echo long theorique', 'Location', 'south');
-sgtitle(['mod\_ofdm  -  MATLAB R' version('-release')]);
+sgtitle(['mod-ofdm  -  MATLAB R' version('-release')]);
 exportgraphics(fh, fullfile(ici, 'mod_ofdm_resultat.png'), 'Resolution', 110); close(fh);
 fh = figure('Visible', 'off', 'Position', [0 0 1000 700]); co = lines(2); nm = {'bbag', 'echo_court'}; hold on;
 for i = 1:2
@@ -279,7 +279,7 @@ for i = 1:2
     semilogy(e, y, 'o', 'Color', co(i, :));
 end
 set(gca, 'YScale', 'log'); ylim([1e-5 0.5]); grid on; xlabel('Eb/N0 (dB)'); ylabel('TEB');
-legend('bbag : theorie, canal estime', 'bbag : canal connu', 'bbag : mesure Simulink', 'echo court : theorie, canal estime', ...
+legend('bruit seul : theorie, canal estime', 'bruit seul : canal connu', 'bruit seul : mesure Simulink', 'echo court : theorie, canal estime', ...
     'echo court : canal connu', 'echo court : mesure Simulink', 'Location', 'southwest');
 title(['TEB de la QPSK OFDM mesure dans Simulink et theorie - MATLAB R' version('-release')]);
 exportgraphics(fh, fullfile(ici, 'teb_simulink.png'), 'Resolution', 110); close(fh);

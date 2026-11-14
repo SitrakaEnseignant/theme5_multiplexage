@@ -4,6 +4,7 @@ aucun bloc de traitement n'est modifié, sauf le bloc Throttle, réglé à une c
     python3 En_ligne/executer_grc_ci.py"""
 import os, sys, json, time, threading, subprocess, importlib, yaml
 import numpy as np
+NOMF = {'bbag': 'bruit seul', 'echo_court': 'écho court', 'echo_long': 'écho long'}
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 ICI = os.path.dirname(os.path.abspath(__file__)); RACINE = os.path.dirname(ICI)
 sys.path.insert(0, ICI)
@@ -134,30 +135,30 @@ fig, ax = plt.subplots(2, 3, figsize=(17, 10))
 t = np.arange(3 * NS) / FS * 1e6; s0 = s[2 * NS:5 * NS]
 ax[0, 0].plot(t, s0.real, lw=0.8, label='partie réelle'); ax[0, 0].plot(t, np.abs(s0), lw=0.8, label='module')
 for k in range(3): ax[0, 0].axvspan(k * NS, k * NS + CP, color='orange', alpha=0.25)
-ax[0, 0].set_xlabel('temps (µs)'); ax[0, 0].set_title('signal émis (scope_emis) ; préfixes cycliques en orange'); ax[0, 0].legend(fontsize=8)
+ax[0, 0].set_xlabel('temps (µs)'); ax[0, 0].set_title('signal émis (scope-emis) ; préfixes cycliques en orange'); ax[0, 0].legend(fontsize=8)
 ax[0, 1].plot(f / 1e3, 10 * np.log10(P / P.max() + 1e-12)); ax[0, 1].set_ylim(-60, 3); ax[0, 1].set_xlabel('fréquence (kHz)')
-ax[0, 1].set_title('spectre du signal émis (spectre_emis)'); ax[0, 1].set_ylabel('dB')
+ax[0, 1].set_title('spectre du signal émis (spectre-emis)'); ax[0, 1].set_ylabel('dB')
 z = ax[0, 2]; zz = np.sort(papr); z.semilogy(zz, 1 - np.arange(len(zz)) / len(zz), '.', ms=3, label='mesure')
-zt = np.linspace(4, 12, 50); z.semilogy(zt, 1 - (1 - np.exp(-10 ** (zt / 10))) ** 52, label='approximation 1-(1-e^{-z})^{52}')
+zt = np.linspace(4, 12, 50); z.semilogy(zt, 1 - (1 - np.exp(-10 ** (zt / 10))) ** 52, label=r'approximation $1-(1-e^{-z})^{52}$')
 z.set_xlabel('PAPR (dB)'); z.set_ylabel('P(PAPR > z)'); z.set_title('rapport puissance crête sur puissance moyenne'); z.legend(fontsize=8); z.set_ylim(1e-3, 1.2)
 d20 = R['echo_court']['donnees_20dB']; br = d20['constellation_brute'][0][:N * 400].reshape(-1, N)[:, np.array(OCC) + N // 2].ravel() / N
 ax[1, 0].plot(br.real, br.imag, '.', ms=2); ax[1, 0].set_aspect('equal'); ax[1, 0].set_title('porteuses avant égalisation, écho court, 20 dB')
 zr = d20['constellation_rx'][0][:20000]; ax[1, 1].plot(zr.real, zr.imag, '.', ms=2); ax[1, 1].set_aspect('equal')
-ax[1, 1].set_xlim(-2, 2); ax[1, 1].set_ylim(-2, 2); ax[1, 1].set_title('après égalisation (constellation_rx), écho court, 20 dB')
+ax[1, 1].set_xlim(-2, 2); ax[1, 1].set_ylim(-2, 2); ax[1, 1].set_title('après égalisation (constellation-rx), écho court, 20 dB')
 kk = np.arange(-N // 2, N // 2)
 for nom, c in (('echo_court', 'C0'), ('echo_long', 'C3')):
     he = R[nom]['donnees_sans_bruit']['canal_rx'][0][:N] / N; ht = np.abs([np.sum(np.asarray(CANAUX[nom]) * np.exp(-2j * np.pi * k * np.arange(len(CANAUX[nom])) / N)) for k in kk])
-    ax[1, 2].plot(kk[np.array(OCC) + 32], np.abs(he[np.array(OCC) + 32]), 'o', ms=3, color=c, label=f'{nom} estimé')
-    ax[1, 2].plot(kk, ht, '-', lw=0.8, color=c, label=f'{nom} théorique')
-ax[1, 2].set_xlabel('indice de porteuse'); ax[1, 2].set_title('module du canal estimé (canal_rx), sans bruit'); ax[1, 2].legend(fontsize=7)
+    ax[1, 2].plot(kk[np.array(OCC) + 32], np.abs(he[np.array(OCC) + 32]), 'o', ms=3, color=c, label=f'{NOMF[nom]} estimé')
+    ax[1, 2].plot(kk, ht, '-', lw=0.8, color=c, label=f'{NOMF[nom]} théorique')
+ax[1, 2].set_xlabel('indice de porteuse'); ax[1, 2].set_title('module du canal estimé (canal-rx), sans bruit'); ax[1, 2].legend(fontsize=7)
 for a in ax.flat: a.grid(ls=':')
-fig.suptitle('ofdm_tx_rx_sim - GNU Radio'); fig.tight_layout(); fig.savefig(os.path.join(OUT, 'ofdm_tx_rx_sim.png'), dpi=110); plt.close(fig)
+fig.suptitle('ofdm-tx-rx-sim - GNU Radio'); fig.tight_layout(); fig.savefig(os.path.join(OUT, 'ofdm_tx_rx_sim.png'), dpi=110); plt.close(fig)
 fig, a = plt.subplots(figsize=(9, 6))
 for i, nom in enumerate(EBN0):
     T = R[nom]['taux']; e = np.array([p['EbN0_dB'] for p in T]); y = np.array([p['TEB'] for p in T]); ee = np.linspace(e.min(), e.max(), 40)
-    a.semilogy(ee, [teb_theorique(CANAUX[nom], 10 ** (x / 10)) for x in ee], color=f'C{i}', lw=1, label=f'{nom} : théorie, canal estimé')
-    a.semilogy(ee, [teb_canal_connu(CANAUX[nom], 10 ** (x / 10)) for x in ee], color=f'C{i}', lw=1, ls='--', label=f'{nom} : canal connu')
-    a.semilogy(e, np.where(y > 0, y, np.nan), 'o', color=f'C{i}', label=f'{nom} : mesure GNU Radio')
+    a.semilogy(ee, [teb_theorique(CANAUX[nom], 10 ** (x / 10)) for x in ee], color=f'C{i}', lw=1, label=f'{NOMF[nom]} : théorie, canal estimé')
+    a.semilogy(ee, [teb_canal_connu(CANAUX[nom], 10 ** (x / 10)) for x in ee], color=f'C{i}', lw=1, ls='--', label=f'{NOMF[nom]} : canal connu')
+    a.semilogy(e, np.where(y > 0, y, np.nan), 'o', color=f'C{i}', label=f'{NOMF[nom]} : mesure GNU Radio')
 a.set_xlabel('Eb/N0 (dB)'); a.set_ylabel('TEB'); a.set_ylim(1e-5, 0.5); a.grid(which='both', ls=':'); a.legend(fontsize=8)
 a.set_title('TEB de la QPSK OFDM mesuré dans GNU Radio et théorie'); fig.tight_layout(); fig.savefig(os.path.join(OUT, 'teb_gnuradio.png'), dpi=110); plt.close(fig)
 for nom in R:
