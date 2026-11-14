@@ -4,14 +4,14 @@
       "erreurs_symboles": 0,
       "symboles": 9600,
       "TEB": 0,
-      "evm": 2.4985414388672414E-16,
-      "ecart_max_canal_estime": 63.000000000000028
+      "evm": 2.6994348552212822E-16,
+      "ecart_max_canal_estime": 4.9632426769599443E-16
     },
     "taux": [
       {
         "EbN0_dB": 0,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.12253125,
+        "erreurs": 23526,
         "bits": 192000,
         "theorie": 0.12212147786418555,
         "canal_connu": 0.078649603525142581,
@@ -19,8 +19,8 @@
       },
       {
         "EbN0_dB": 2,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.066473958333333333,
+        "erreurs": 12763,
         "bits": 192000,
         "theorie": 0.06652791252690482,
         "canal_connu": 0.037506128358925979,
@@ -28,17 +28,17 @@
       },
       {
         "EbN0_dB": 4,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.026854166666666665,
+        "erreurs": 5156,
         "bits": 192000,
-        "theorie": 0.027599478218158269,
+        "theorie": 0.027599478218158311,
         "canal_connu": 0.012500818040737568,
         "conforme": true
       },
       {
         "EbN0_dB": 6,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.007526041666666667,
+        "erreurs": 1445,
         "bits": 192000,
         "theorie": 0.0074744962997974574,
         "canal_connu": 0.0023882907809328071,
@@ -46,17 +46,17 @@
       },
       {
         "EbN0_dB": 8,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.0010052083333333334,
+        "erreurs": 193,
         "bits": 192000,
-        "theorie": 0.0010380381755216294,
+        "theorie": 0.0010380381755216296,
         "canal_connu": 0.00019090777407599314,
         "conforme": true
       },
       {
         "EbN0_dB": 10,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 3.6458333333333336E-5,
+        "erreurs": 7,
         "bits": 192000,
         "theorie": 5.0443113110047483E-5,
         "canal_connu": 3.8721082155220472E-6,
@@ -69,61 +69,61 @@
       "erreurs_symboles": 0,
       "symboles": 9600,
       "TEB": 0,
-      "evm": 5.5859546897844591E-16,
-      "ecart_max_canal_estime": 119.12521227790849
+      "evm": 6.2920018707478456E-16,
+      "ecart_max_canal_estime": 1.0329400704738531E-15
     },
     "taux": [
       {
         "EbN0_dB": 0,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.11495833333333333,
+        "erreurs": 22072,
         "bits": 192000,
-        "theorie": 0.11591810533955645,
+        "theorie": 0.11591810533955649,
         "canal_connu": 0.085048102953839133,
         "conforme": true
       },
       {
         "EbN0_dB": 4,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.066197916666666662,
+        "erreurs": 12710,
         "bits": 192000,
-        "theorie": 0.067275367532507527,
+        "theorie": 0.067275367532507555,
         "canal_connu": 0.049829004306011414,
         "conforme": true
       },
       {
         "EbN0_dB": 8,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.03966666666666667,
+        "erreurs": 7616,
         "bits": 192000,
-        "theorie": 0.039921901276355247,
+        "theorie": 0.039921901276355261,
         "canal_connu": 0.028746057419698712,
         "conforme": true
       },
       {
         "EbN0_dB": 12,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.02115625,
+        "erreurs": 4062,
         "bits": 192000,
-        "theorie": 0.021345147143792261,
+        "theorie": 0.021345147143792268,
         "canal_connu": 0.0149031554276103,
         "conforme": true
       },
       {
         "EbN0_dB": 16,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.009192708333333334,
+        "erreurs": 1765,
         "bits": 192000,
-        "theorie": 0.0091909322036599645,
+        "theorie": 0.00919093220365997,
         "canal_connu": 0.0058953971442178218,
         "conforme": true
       },
       {
         "EbN0_dB": 20,
-        "TEB": 0,
-        "erreurs": 0,
+        "TEB": 0.0022395833333333334,
+        "erreurs": 430,
         "bits": 192000,
-        "theorie": 0.0023117585384270461,
+        "theorie": 0.002311758538427047,
         "canal_connu": 0.0011699262785309149,
         "conforme": true
       }
@@ -131,18 +131,18 @@
   },
   "echo_long": {
     "sans_bruit": {
-      "erreurs_symboles": 646,
+      "erreurs_symboles": 672,
       "symboles": 9600,
-      "TEB": 0.039166666666666669,
-      "evm": 0.55093827943099272,
-      "ecart_max_canal_estime": 137.71230637088414
+      "TEB": 0.038177083333333334,
+      "evm": 0.5482480142920243,
+      "ecart_max_canal_estime": 0.31763294806795273
     }
   },
   "signal": {
-    "part_puissance_bande": 0.96501029720887066,
-    "puissance_moyenne": 46.62232733166136,
+    "part_puissance_bande": 0.99452838253104481,
+    "puissance_moyenne": 52.664589787559628,
     "puissance_attendue": 52,
-    "papr_moyen_dB": 15.832871757994171,
+    "papr_moyen_dB": 12.441238061671232,
     "P_papr_sup_8dB": 0.90909090909090906,
     "P_papr_sup_8dB_approx": 0.090321625667610816
   }

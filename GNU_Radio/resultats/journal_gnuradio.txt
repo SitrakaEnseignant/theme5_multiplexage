@@ -13,10 +13,9 @@ Block paths:
 >>> Loading: /home/runner/work/theme5_multiplexage/theme5_multiplexage/resultats_gnuradio/hl/ofdm_tx_rx_sim_hl_nb_bbag.grc
 >>> Load Error: /home/runner/work/theme5_multiplexage/theme5_multiplexage/resultats_gnuradio/hl/ofdm_tx_rx_sim_hl_nb_bbag.grc: Flowgraph invalid
 **************************************************
-2 errors from flowgraph:
+1 errors from flowgraph:
 Sink - in0(0):
-	Port is not connected.Param - ID(id):
-	ID "fft" is blacklisted.
+	Port is not connected.
 **************************************************
 Compilation error
 

@@ -8,7 +8,7 @@
       "Maximum",
       "4 * ones(1, ND)",
       "Seed",
-      "graine",
+      "graine + (1:ND)",
       "SampleTime",
       "Tsym"
     ]
@@ -65,7 +65,7 @@
     "parametres": []
   },
   {
-    "bloc": "ifft",
+    "bloc": "ifft_tx",
     "bibliotheque": "User-Defined Functions/MATLAB Function",
     "parametres": []
   },
@@ -116,7 +116,7 @@
       "Variance",
       "sigma2 / 2",
       "Seed",
-      "1",
+      "1000 + (1:NS)",
       "SampleTime",
       "Tsym"
     ]
@@ -130,7 +130,7 @@
       "Variance",
       "sigma2 / 2",
       "Seed",
-      "2",
+      "2000 + (1:NS)",
       "SampleTime",
       "Tsym"
     ]
@@ -146,7 +146,7 @@
     "parametres": []
   },
   {
-    "bloc": "fft",
+    "bloc": "fft_rx",
     "bibliotheque": "User-Defined Functions/MATLAB Function",
     "parametres": []
   },
