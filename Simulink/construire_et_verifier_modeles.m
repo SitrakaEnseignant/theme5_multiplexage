@@ -4,7 +4,8 @@
 % (préambule, données, pilotes), IFFT, préfixe cyclique, canal à trajets multiples, bruit gaussien complexe,
 % retrait du préfixe, FFT, estimation du canal et égalisation, décision. Le modèle fonctionne à la cadence
 % des symboles OFDM : chaque pas de calcul traite un symbole complet (vecteurs de 48, 64 ou 80 valeurs).
-% Chaque élément des vecteurs aléatoires a sa propre graine, sinon les 48 (ou 80) valeurs d'un pas seraient identiques.
+% Chaque élément des vecteurs aléatoires a sa propre graine, tirée au hasard une fois pour toutes : avec une seule
+% graine, les 48 (ou 80) valeurs d'un pas seraient identiques, et des graines voisines donneraient des suites corrélées.
 % Le script exécute le modèle sans bruit pour trois canaux, puis pour plusieurs Eb/N0, et vérifie le
 % spectre, la puissance, le canal estimé et le taux d'erreur binaire comparé à la théorie.
 % Les paramètres sont lus dans parametres_ofdm.json, écrit par outils/generer_grc.py.
@@ -101,10 +102,11 @@ if bdIsLoaded(mdl), close_system(mdl, 0); end
 new_system(mdl);
 set_param(mdl, 'SolverType', 'Fixed-step', 'Solver', 'FixedStepDiscrete', 'FixedStep', num2str(P.Tsym, 17), 'StopTime', '1');
 hws = get_param(mdl, 'ModelWorkspace');
-v = {'Tsym', P.Tsym; 'sigma2', 0; 'taps', 1; 'graine', 7; 'ptsI', real(P.pts); 'ptsQ', imag(P.pts); 'ND', P.ND; 'NS', P.NS};
+rs = RandStream('mt19937ar', 'Seed', 7);
+v = {'Tsym', P.Tsym; 'sigma2', 0; 'taps', 1; 'graines_src', randi(rs, 2^31 - 2, 1, P.ND); 'graines_I', randi(rs, 2^31 - 2, 1, P.NS); 'graines_Q', randi(rs, 2^31 - 2, 1, P.NS); 'ptsI', real(P.pts); 'ptsQ', imag(P.pts); 'ND', P.ND; 'NS', P.NS};
 for k = 1:size(v, 1), hws.assignin(v{k, 1}, v{k, 2}); end
 % émetteur
-ajouter(mdl, [B 'Sources/Uniform Random Number'], 'src', 0, 1, 'Minimum', 'zeros(1, ND)', 'Maximum', '4 * ones(1, ND)', 'Seed', 'graine + (1:ND)', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Uniform Random Number'], 'src', 0, 1, 'Minimum', 'zeros(1, ND)', 'Maximum', '4 * ones(1, ND)', 'Seed', 'graines_src', 'SampleTime', 'Tsym');
 ajouter(mdl, [B 'Math Operations/Rounding Function'], 'indice', 1, 1, 'Operator', 'floor');
 ajouter(mdl, [B 'Lookup Tables/Direct Lookup Table (n-D)'], 'table_I', 2, 0.5, 'NumberOfTableDimensions', '1', 'Table', 'ptsI');
 ajouter(mdl, [B 'Lookup Tables/Direct Lookup Table (n-D)'], 'table_Q', 2, 1.5, 'NumberOfTableDimensions', '1', 'Table', 'ptsQ');
@@ -124,8 +126,8 @@ relier(mdl, 'ifft_tx/1', 'prefixe/1'); relier(mdl, 'prefixe/1', 's/1');
 % canal
 ajouter(mdl, [B 'Sources/Constant'], 'taps', 6, 2.2, 'Value', 'taps');
 fonction(mdl, 'canal_trajets', 7, 1, code_canal_trajets());
-ajouter(mdl, [B 'Sources/Random Number'], 'bruit_I', 7, 2.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '1000 + (1:NS)', 'SampleTime', 'Tsym');
-ajouter(mdl, [B 'Sources/Random Number'], 'bruit_Q', 7, 3.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', '2000 + (1:NS)', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Random Number'], 'bruit_I', 7, 2.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', 'graines_I', 'SampleTime', 'Tsym');
+ajouter(mdl, [B 'Sources/Random Number'], 'bruit_Q', 7, 3.4, 'Mean', 'zeros(1, NS)', 'Variance', 'sigma2 / 2', 'Seed', 'graines_Q', 'SampleTime', 'Tsym');
 fonction(mdl, 'canal', 8, 1.6, sprintf('function r = canal(x, nI, nQ)\n%% addition du bruit gaussien complexe\nr = x(:).'' + complex(nI(:).'', nQ(:).'');\nend\n'));
 relier(mdl, 'prefixe/1', 'canal_trajets/1'); relier(mdl, 'taps/1', 'canal_trajets/2'); relier(mdl, 'canal_trajets/1', 'canal/1');
 relier(mdl, 'bruit_I/1', 'canal/2'); relier(mdl, 'bruit_Q/1', 'canal/3');
