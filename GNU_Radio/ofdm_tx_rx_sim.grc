@@ -1,0 +1,1207 @@
+options:
+  parameters:
+    author: Thème 5 - multiplexage OFDM (simulation pure)
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: 'Chaîne OFDM 802.11a simplifiée : 64 porteuses, préfixe de 16 échantillons, 48 porteuses de données en QPSK, 4 pilotes, 2 symboles d''apprentissage par trame. Aucun matériel de radio logicielle.'
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: ofdm_tx_rx_sim
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'OFDM : émetteur, canal à trajets multiples et récepteur (simulation)'
+    window_size: (1300,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 8
+    - 8
+    rotation: 0
+    state: enabled
+blocks:
+- name: imports
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: 'import numpy as np'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1500
+    - 12
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '1000000.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 16
+    - 12
+    rotation: 0
+    state: enabled
+- name: fft_len
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 140
+    - 12
+    rotation: 0
+    state: enabled
+- name: cp_len
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '16'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 250
+    - 12
+    rotation: 0
+    state: enabled
+- name: npre
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 360
+    - 12
+    rotation: 0
+    state: enabled
+- name: nsym_trame
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 470
+    - 12
+    rotation: 0
+    state: enabled
+- name: ntrames
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 600
+    - 12
+    rotation: 0
+    state: enabled
+- name: occupied_carriers
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '((-26, -25, -24, -23, -22, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10, -9, -8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26),)'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 720
+    - 12
+    rotation: 0
+    state: enabled
+- name: pilot_carriers
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '((-21, -7, 7, 21),)'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 900
+    - 12
+    rotation: 0
+    state: enabled
+- name: pilot_symbols
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '((1, 1, 1, -1),)'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1050
+    - 12
+    rotation: 0
+    state: enabled
+- name: preambule
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 0.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1200
+    - 12
+    rotation: 0
+    state: enabled
+- name: taps
+  id: variable
+  parameters:
+    alias: ''
+    comment: ''
+    value: '[1.0]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1350
+    - 12
+    rotation: 0
+    state: enabled
+- name: constellation
+  id: variable_constellation
+  parameters:
+    comment: 'Note that GNUradio secretly re-scales your constellation
+
+      to have an average magnitude of 1. This is really annoying,
+
+      but is meant to work with the AGCs that rescale the signal in this way'
+    const_points: '[complex(0.7071067811865475, 0.7071067811865475), complex(-0.7071067811865475, 0.7071067811865475), complex(-0.7071067811865475, -0.7071067811865475), complex(0.7071067811865475, -0.7071067811865475)]'
+    dims: '1'
+    normalization: 'digital.constellation.AMPLITUDE_NORMALIZATION'
+    npwr: '1.0'
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: 'None'
+    sym_map: '[0, 1, 2, 3]'
+    type: 'calcdist'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1650
+    - 12
+    rotation: 0
+    state: enabled
+- name: noise_amp
+  id: qtgui_range
+  parameters:
+    alias: ''
+    comment: ''
+    value: '0.0'
+    start: '0'
+    stop: '5'
+    step: '0.01'
+    label: 'Écart type du bruit par voie (I et Q)'
+    widget: 'counter_slider'
+    rangeType: 'float'
+    gui_hint: '0,0,1,2'
+    orient: 'QtCore.Qt.Horizontal'
+    min_len: '200'
+    outputmsgname: 'value'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 16
+    - 110
+    rotation: 0
+    state: enabled
+- name: src
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '4'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: 'ntrames*nsym_trame*48'
+    repeat: 'True'
+    type: 'byte'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 16
+    - 300
+    rotation: 0
+    state: enabled
+- name: symboles_tx
+  id: digital_chunks_to_symbols_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    dimension: '1'
+    in_type: 'byte'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    out_type: 'complex'
+    symbol_table: '[complex(0.7071067811865475, 0.7071067811865475), complex(-0.7071067811865475, 0.7071067811865475), complex(-0.7071067811865475, -0.7071067811865475), complex(0.7071067811865475, -0.7071067811865475)]'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 200
+    - 300
+    rotation: 0
+    state: enabled
+- name: trame
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    vlen: '1'
+    packet_len: 'nsym_trame*48'
+    len_tag_key: '"packet_len"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 380
+    - 300
+    rotation: 0
+    state: enabled
+- name: allocateur
+  id: digital_ofdm_carrier_allocator_cvc
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    fft_len: 'fft_len'
+    occupied_carriers: 'occupied_carriers'
+    pilot_carriers: 'pilot_carriers'
+    pilot_symbols: 'pilot_symbols'
+    sync_words: '(preambule, preambule)'
+    len_tag_key: '"packet_len"'
+    output_is_shifted: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 560
+    - 300
+    rotation: 0
+    state: enabled
+- name: ifft
+  id: fft_vxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    fft_size: 'fft_len'
+    forward: 'False'
+    window: '[1.0] * fft_len'
+    shift: 'True'
+    nthreads: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 800
+    - 300
+    rotation: 0
+    state: enabled
+- name: prefixe
+  id: digital_ofdm_cyclic_prefixer
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    input_size: 'fft_len'
+    cp_len: 'cp_len'
+    rolloff: '0'
+    tagname: '"packet_len"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1000
+    - 300
+    rotation: 0
+    state: enabled
+- name: throttle
+  id: blocks_throttle
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    samples_per_second: 'samp_rate'
+    vlen: '1'
+    ignoretag: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1200
+    - 300
+    rotation: 0
+    state: enabled
+- name: canal_trajets
+  id: filter_fir_filter_xxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'ccc'
+    decim: '1'
+    taps: 'taps'
+    samp_delay: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1400
+    - 300
+    rotation: 0
+    state: enabled
+- name: bruit_I
+  id: analog_noise_source_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'float'
+    noise_type: 'analog.GR_GAUSSIAN'
+    amp: 'noise_amp'
+    seed: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1400
+    - 410
+    rotation: 0
+    state: enabled
+- name: bruit_Q
+  id: analog_noise_source_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'float'
+    noise_type: 'analog.GR_GAUSSIAN'
+    amp: 'noise_amp'
+    seed: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1400
+    - 500
+    rotation: 0
+    state: enabled
+- name: bruit
+  id: blocks_float_to_complex
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1600
+    - 450
+    rotation: 0
+    state: enabled
+- name: canal
+  id: blocks_add_xx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    num_inputs: '2'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1800
+    - 300
+    rotation: 0
+    state: enabled
+- name: scope_emis
+  id: qtgui_time_sink_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    name: '"scope_emis"'
+    size: '400'
+    srate: 'samp_rate'
+    nconnections: '1'
+    autoscale: 'False'
+    ymin: '-30'
+    ymax: '30'
+    update_time: '0.10'
+    grid: 'True'
+    entags: 'False'
+    gui_hint: '1,0,1,1'
+    legend: 'True'
+    ylabel: 'Amplitude'
+    yunit: '""'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_level: '0.0'
+    tr_delay: '0'
+    tr_chan: '0'
+    tr_slope: 'qtgui.TRIG_SLOPE_POS'
+    tr_tag: '""'
+    axislabels: 'True'
+    ctrlpanel: 'False'
+    stemplot: 'False'
+    label1: '"signal émis"'
+    label2: 'Message démodulé (|z| - 1)/m'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1200
+    - 140
+    rotation: 0
+    state: enabled
+- name: spectre_emis
+  id: qtgui_freq_sink_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    name: '"spectre_emis"'
+    fftsize: '1024'
+    wintype: 'window.WIN_HANN'
+    fc: '0'
+    bw: 'samp_rate'
+    nconnections: '1'
+    average: '0.05'
+    ymin: '-80'
+    ymax: '40'
+    update_time: '0.10'
+    grid: 'True'
+    autoscale: 'False'
+    gui_hint: '1,1,1,1'
+    legend: 'True'
+    axislabels: 'True'
+    ctrlpanel: 'False'
+    fftavg: 'False'
+    showports: 'False'
+    norm_window: 'False'
+    label: 'Relative Gain'
+    units: 'dB'
+    freqhalf: 'True'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_level: '0.0'
+    tr_chan: '0'
+    tr_tag: '""'
+    label1: '"signal émis"'
+    label2: 'Bloc Repeat'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1400
+    - 140
+    rotation: 0
+    state: enabled
+- name: retrait_prefixe
+  id: blocks_keep_m_in_n
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    m: 'fft_len'
+    n: 'fft_len + cp_len'
+    offset: 'cp_len'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 16
+    - 620
+    rotation: 0
+    state: enabled
+- name: serie_parallele
+  id: blocks_stream_to_vector
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    num_items: 'fft_len'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 220
+    - 620
+    rotation: 0
+    state: enabled
+- name: fft
+  id: fft_vxx
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    fft_size: 'fft_len'
+    forward: 'True'
+    window: '[1.0] * fft_len'
+    shift: 'True'
+    nthreads: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 420
+    - 620
+    rotation: 0
+    state: enabled
+- name: egaliseur
+  id: epy_block
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    _source_code: "\"\"\"\nBloc Python intégré « egaliseur » : estimation du canal sur les symboles d'apprentissage,\négalisation à un coefficient par porteuse et extraction des porteuses de données.\nEntrée : symboles OFDM après la FFT (vecteurs de fft_len valeurs, porteuse 0 au centre).\nSortie 0 : les nd symboles de données égalisés de chaque symbole OFDM de données.\nSortie 1 : l'estimation du canal sur les fft_len porteuses, répétée pour chaque symbole de données.\nChaque trame comprend npre symboles d'apprentissage identiques puis nsym symboles de données.\n\"\"\"\nimport numpy as np\nfrom gnuradio import gr\n\n\nclass blk(gr.basic_block):\n    def __init__(self, fft_len=64, npre=2, nsym=20, preambule=[0.0] * 64, porteuses=[0] * 48):\n        self.nd = len(porteuses)\n        gr.basic_block.__init__(self, name='egaliseur', in_sig=[(np.complex64, fft_len)],\n                                out_sig=[(np.complex64, self.nd), (np.complex64, fft_len)])\n        self.npre, self.nsym = npre,\
+      \ nsym\n        self.pre = np.array(preambule, dtype=complex)\n        self.occ = np.array(porteuses, dtype=int) + fft_len // 2\n        self.k, self.acc, self.h = 0, np.zeros(fft_len, complex), np.ones(fft_len, complex)\n\n    def general_work(self, input_items, output_items):\n        x, y0, y1 = input_items[0], output_items[0], output_items[1]\n        i = o = 0\n        while i < len(x) and o < len(y0):\n            if self.k < self.npre:                       # symbole d'apprentissage : accumulation\n                self.acc = self.acc + x[i]\n                if self.k == self.npre - 1:              # estimation H = moyenne(Y) / P sur les porteuses utilisées\n                    p = self.pre != 0\n                    self.h = np.ones(len(self.acc), complex)\n                    self.h[p] = self.acc[p] / self.npre / self.pre[p]\n            else:                                        # symbole de données : égalisation Z = Y / H\n                y0[o] = (x[i] / self.h)[self.occ]\n\
+      \                y1[o] = self.h\n                o += 1\n            self.k += 1\n            if self.k == self.npre + self.nsym:\n                self.k, self.acc = 0, np.zeros(len(self.acc), complex)\n            i += 1\n        self.consume(0, i)\n        return o\n"
+    fft_len: 'fft_len'
+    npre: 'npre'
+    nsym: 'nsym_trame'
+    preambule: 'preambule'
+    porteuses: '[-26, -25, -24, -23, -22, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10, -9, -8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 640
+    - 620
+    rotation: 0
+    state: enabled
+- name: donnees
+  id: blocks_vector_to_stream
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    num_items: '48'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 880
+    - 620
+    rotation: 0
+    state: enabled
+- name: canal_estime
+  id: blocks_vector_to_stream
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    num_items: 'fft_len'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 880
+    - 740
+    rotation: 0
+    state: enabled
+- name: porteuses_brutes
+  id: blocks_vector_to_stream
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    num_items: 'fft_len'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 640
+    - 820
+    rotation: 0
+    state: enabled
+- name: decision
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: 'constellation'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1080
+    - 620
+    rotation: 0
+    state: enabled
+- name: dec_float
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1260
+    - 620
+    rotation: 0
+    state: enabled
+- name: tx_float
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 200
+    - 190
+    rotation: 0
+    state: enabled
+- name: constellation_rx
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"red"'
+    color4: '"red"'
+    color5: '"red"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    grid: 'True'
+    gui_hint: '2,1,1,1'
+    label1: '"porteuses"'
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"constellation_rx"'
+    nconnections: '1'
+    size: '2048'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_slope: 'qtgui.TRIG_SLOPE_POS'
+    tr_tag: '""'
+    type: 'complex'
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1080
+    - 740
+    rotation: 0
+    state: enabled
+- name: constellation_brute
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"red"'
+    color4: '"red"'
+    color5: '"red"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    grid: 'True'
+    gui_hint: '2,0,1,1'
+    label1: '"porteuses"'
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"constellation_brute"'
+    nconnections: '1'
+    size: '2048'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_slope: 'qtgui.TRIG_SLOPE_POS'
+    tr_tag: '""'
+    type: 'complex'
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '30'
+    xmin: '-30'
+    ymax: '30'
+    ymin: '-30'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 880
+    - 840
+    rotation: 0
+    state: enabled
+- name: canal_rx
+  id: qtgui_time_sink_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'complex'
+    name: '"canal_rx"'
+    size: '64'
+    srate: 'samp_rate'
+    nconnections: '1'
+    autoscale: 'False'
+    ymin: '-3'
+    ymax: '3'
+    update_time: '0.10'
+    grid: 'True'
+    entags: 'False'
+    gui_hint: '3,0,1,1'
+    legend: 'True'
+    ylabel: 'Amplitude'
+    yunit: '""'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_level: '0.0'
+    tr_delay: '0'
+    tr_chan: '0'
+    tr_slope: 'qtgui.TRIG_SLOPE_POS'
+    tr_tag: '""'
+    axislabels: 'True'
+    ctrlpanel: 'False'
+    stemplot: 'False'
+    label1: '"canal estimé"'
+    label2: 'Message démodulé (|z| - 1)/m'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1080
+    - 840
+    rotation: 0
+    state: enabled
+- name: symboles
+  id: qtgui_time_sink_x
+  parameters:
+    alias: ''
+    comment: ''
+    affinity: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: 'float'
+    name: '"symboles"'
+    size: '96'
+    srate: 'samp_rate'
+    nconnections: '2'
+    autoscale: 'False'
+    ymin: '-0.5'
+    ymax: '3.5'
+    update_time: '0.10'
+    grid: 'True'
+    entags: 'False'
+    gui_hint: '3,1,1,1'
+    legend: 'True'
+    ylabel: 'Amplitude'
+    yunit: '""'
+    tr_mode: 'qtgui.TRIG_MODE_FREE'
+    tr_level: '0.0'
+    tr_delay: '0'
+    tr_chan: '0'
+    tr_slope: 'qtgui.TRIG_SLOPE_POS'
+    tr_tag: '""'
+    axislabels: 'True'
+    ctrlpanel: 'False'
+    stemplot: 'False'
+    label1: '"symbole émis"'
+    label2: '"symbole décidé"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate:
+    - 1460
+    - 620
+    rotation: 0
+    state: enabled
+connections:
+- - src
+  - '0'
+  - symboles_tx
+  - '0'
+- - symboles_tx
+  - '0'
+  - trame
+  - '0'
+- - trame
+  - '0'
+  - allocateur
+  - '0'
+- - allocateur
+  - '0'
+  - ifft
+  - '0'
+- - ifft
+  - '0'
+  - prefixe
+  - '0'
+- - prefixe
+  - '0'
+  - throttle
+  - '0'
+- - throttle
+  - '0'
+  - canal_trajets
+  - '0'
+- - canal_trajets
+  - '0'
+  - canal
+  - '0'
+- - bruit_I
+  - '0'
+  - bruit
+  - '0'
+- - bruit_Q
+  - '0'
+  - bruit
+  - '1'
+- - bruit
+  - '0'
+  - canal
+  - '1'
+- - throttle
+  - '0'
+  - scope_emis
+  - '0'
+- - throttle
+  - '0'
+  - spectre_emis
+  - '0'
+- - canal
+  - '0'
+  - retrait_prefixe
+  - '0'
+- - retrait_prefixe
+  - '0'
+  - serie_parallele
+  - '0'
+- - serie_parallele
+  - '0'
+  - fft
+  - '0'
+- - fft
+  - '0'
+  - egaliseur
+  - '0'
+- - egaliseur
+  - '0'
+  - donnees
+  - '0'
+- - egaliseur
+  - '1'
+  - canal_estime
+  - '0'
+- - fft
+  - '0'
+  - porteuses_brutes
+  - '0'
+- - donnees
+  - '0'
+  - decision
+  - '0'
+- - decision
+  - '0'
+  - dec_float
+  - '0'
+- - src
+  - '0'
+  - tx_float
+  - '0'
+- - donnees
+  - '0'
+  - constellation_rx
+  - '0'
+- - porteuses_brutes
+  - '0'
+  - constellation_brute
+  - '0'
+- - canal_estime
+  - '0'
+  - canal_rx
+  - '0'
+- - tx_float
+  - '0'
+  - symboles
+  - '0'
+- - dec_float
+  - '0'
+  - symboles
+  - '1'
+metadata:
+  file_format: 1
+  grc_version: 3.10.9.2
