@@ -45,7 +45,7 @@ def executer(ntrames, taps, ebn0=None, tag='a'):
     path, fid, sinks = headless(os.path.join(G, 'ofdm_tx_rx_sim.grc'), {'ntrames': ntrames, 'noise_amp': amp, 'taps': list(taps)},
                                 {'src': {'repeat': 'False'}}, tag)
     r = subprocess.run(['grcc', '-o', HL, path], capture_output=True, text=True)
-    if r.returncode: raise RuntimeError(r.stdout + r.stderr)
+    if r.returncode: raise RuntimeError(r.stdout + r.stderr + '\n' + diagnostic(path))
     sys.path.insert(0, HL); mod = importlib.reload(importlib.import_module(fid))
     tb = getattr(mod, fid)(); t0 = time.time(); tb.start()
     th = threading.Thread(target=tb.wait); th.start(); th.join(timeout=300)
@@ -53,6 +53,26 @@ def executer(ntrames, taps, ebn0=None, tag='a'):
     if not fini: tb.stop(); th.join()
     d = {s: [np.array(getattr(tb, f'{s}_{k}').data()) for k in range(n)] for s, (typ, n) in sinks.items()}
     return d, {'duree_s': round(time.time() - t0, 2), 'fin_naturelle': fini, 'ecart_type_bruit': amp}
+
+
+def diagnostic(path):
+    """en cas d'échec de grcc : nom du bloc concerné par chaque erreur de validation, ports du bloc Python"""
+    try:
+        from gnuradio import gr
+        from gnuradio.grc.core.platform import Platform
+        p = Platform(name='diagnostic', prefs=gr.prefs(), version=gr.version(),
+                     version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()))
+        p.build_library(); fg = p.make_flow_graph(); fg.grc_file_path = path
+        fg.import_data(p.parse_flow_graph(path)); fg.rewrite(); fg.validate()
+        out = []
+        for elem, msg in fg.iter_error_messages():
+            b = getattr(elem, 'parent_block', elem); out.append(f'BLOC {getattr(b, "name", "?")} / {elem} : {msg}')
+        for b in fg.blocks:
+            if b.key == 'epy_block':
+                out.append('ports du bloc Python : ' + str([(pp.name, pp.dtype, pp.vlen) for pp in list(b.sinks) + list(b.sources)]))
+        return '\n'.join(out)
+    except Exception as e:
+        return f'diagnostic impossible : {e!r}'
 
 
 def erreurs(d):
