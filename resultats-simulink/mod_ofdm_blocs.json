@@ -1,0 +1,213 @@
+[
+  {
+    "bloc": "src",
+    "bibliotheque": "Sources/Uniform Random Number",
+    "parametres": [
+      "Minimum",
+      "zeros(1, ND)",
+      "Maximum",
+      "4 * ones(1, ND)",
+      "Seed",
+      "graines_src",
+      "SampleTime",
+      "Tsym"
+    ]
+  },
+  {
+    "bloc": "indice",
+    "bibliotheque": "Math Operations/Rounding Function",
+    "parametres": [
+      "Operator",
+      "floor"
+    ]
+  },
+  {
+    "bloc": "table_I",
+    "bibliotheque": "Lookup Tables/Direct Lookup Table (n-D)",
+    "parametres": [
+      "NumberOfTableDimensions",
+      "1",
+      "Table",
+      "ptsI"
+    ]
+  },
+  {
+    "bloc": "table_Q",
+    "bibliotheque": "Lookup Tables/Direct Lookup Table (n-D)",
+    "parametres": [
+      "NumberOfTableDimensions",
+      "1",
+      "Table",
+      "ptsQ"
+    ]
+  },
+  {
+    "bloc": "symboles_tx",
+    "bibliotheque": "Math Operations/Real-Imag to Complex",
+    "parametres": [
+      "Input",
+      "Real and imag"
+    ]
+  },
+  {
+    "bloc": "sym",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "sym",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "allocateur",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "ifft_tx",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "prefixe",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "s",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "s",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "donnees",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "donnees",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "taps",
+    "bibliotheque": "Sources/Constant",
+    "parametres": [
+      "Value",
+      "taps"
+    ]
+  },
+  {
+    "bloc": "canal_trajets",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "bruit_I",
+    "bibliotheque": "Sources/Random Number",
+    "parametres": [
+      "Mean",
+      "zeros(1, NS)",
+      "Variance",
+      "sigma2 / 2",
+      "Seed",
+      "graines_I",
+      "SampleTime",
+      "Tsym"
+    ]
+  },
+  {
+    "bloc": "bruit_Q",
+    "bibliotheque": "Sources/Random Number",
+    "parametres": [
+      "Mean",
+      "zeros(1, NS)",
+      "Variance",
+      "sigma2 / 2",
+      "Seed",
+      "graines_Q",
+      "SampleTime",
+      "Tsym"
+    ]
+  },
+  {
+    "bloc": "canal",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "retrait_prefixe",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "fft_rx",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "egaliseur",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "decision",
+    "bibliotheque": "User-Defined Functions/MATLAB Function",
+    "parametres": []
+  },
+  {
+    "bloc": "Ybrut",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "Ybrut",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "z",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "z",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "hest",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "hest",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "valide",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "valide",
+      "SaveFormat",
+      "Array"
+    ]
+  },
+  {
+    "bloc": "dec",
+    "bibliotheque": "Sinks/To Workspace",
+    "parametres": [
+      "VariableName",
+      "dec",
+      "SaveFormat",
+      "Array"
+    ]
+  }
+]
