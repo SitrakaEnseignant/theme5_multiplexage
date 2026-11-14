@@ -421,7 +421,7 @@ blocks:
     rotation: 0
     state: enabled
 - name: canal_trajets
-  id: filter_fir_filter_xxx
+  id: fir_filter_xxx
   parameters:
     alias: ''
     comment: ''

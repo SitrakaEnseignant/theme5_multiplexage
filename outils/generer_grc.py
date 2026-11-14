@@ -105,7 +105,7 @@ def construire():
     g.c('src', 'symboles_tx'); g.c('symboles_tx', 'trame'); g.c('trame', 'allocateur'); g.c('allocateur', 'ifft_tx')
     g.c('ifft_tx', 'prefixe'); g.c('prefixe', 'throttle')
     # canal : trajets multiples puis bruit gaussien complexe
-    g.blk('canal_trajets', 'filter_fir_filter_xxx', 1400, y1, type='ccc', decim='1', taps='taps', samp_delay='0')
+    g.blk('canal_trajets', 'fir_filter_xxx', 1400, y1, type='ccc', decim='1', taps='taps', samp_delay='0')
     g.blk('bruit_I', 'analog_noise_source_x', 1400, y1 + 110, type='float', noise_type='analog.GR_GAUSSIAN', amp='noise_amp', seed='1')
     g.blk('bruit_Q', 'analog_noise_source_x', 1400, y1 + 200, type='float', noise_type='analog.GR_GAUSSIAN', amp='noise_amp', seed='2')
     g.blk('bruit', 'blocks_float_to_complex', 1600, y1 + 150, vlen='1')
